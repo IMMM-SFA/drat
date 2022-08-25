@@ -95,12 +95,13 @@ create_model_df <- function(type,n){
   return(all)
 }
 
-do_stan <- function(this_df, region, ft, ct, num_dates, period, out_dir) {
+do_stan <- function(this_df, region, ft, ct, num_dates, period, formulation, out_dir) {
   cat(paste("num_dates: ",num_dates,"     \n",sep=""))
   cat(paste("grouping: ",grouping,"     \n",sep=""))
   cat(paste("region: ",region,"     \n",sep=""))
   cat(paste("fuel type: ",ft,"     \n",sep=""))
   cat(paste("cooling tech: ",ct,"    \n",sep=""))
+  cat(paste("formula: ",formulation,"    \n",sep=""))
   b <- stan_glmer(
     formula(formulation),
     family = gaussian(),
@@ -140,8 +141,8 @@ foreach(period = periods) %:%
         }
         if (nrow(this_df) > 0) {
           capture.output(
-            do_stan(this_df, region, ft, ct, num_dates, period, out_dir),
-            file = paste0(out_dir,"/",grouping,"_n",num_dates, "_", region, ft, ct, ".log")
+            do_stan(this_df, region, ft, ct, num_dates, period, formulation, out_dir),
+            file = paste0(out_dir,"/",grouping,"_n",num_dates, "_",period,"_",region, ft, ct, ".log")
           )
         }
         return
